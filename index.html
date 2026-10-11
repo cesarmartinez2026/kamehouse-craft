@@ -8,171 +8,180 @@
 <title>KameHouse Craft | L2 Sudamérica x10</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#11100e;color:#eee5d5;font-family:Arial,sans-serif}
-header{text-align:center;padding:25px 12px;background:#211a10;border-bottom:2px solid #c49a45}
-h1{color:#f2ce7a;margin:0}
-header p{color:#cbbda2}
-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;padding:12px;background:#19150f}
-button{padding:11px;background:#302416;color:#f2ce7a;border:1px solid #96743a;border-radius:7px;cursor:pointer}
-main{max-width:850px;margin:auto;padding:14px}
-.card{background:#1d1a15;border:1px solid #574326;border-radius:10px;padding:16px;margin:12px 0}
-h2,h3{color:#e9c46e}
-input{width:100%;padding:12px;margin:7px 0;background:#100f0d;color:white;border:1px solid #76603b;border-radius:6px;font-size:16px}
-.hidden{display:none}
-.small{color:#bdb19c;font-size:13px}
-.result{padding:12px 0;border-bottom:1px solid #44351f}
-footer{text-align:center;padding:20px;color:#bdb19c;font-size:12px}
+body{margin:0;background:#10131b;color:#edf1f8;font-family:Arial,sans-serif}
+header{text-align:center;padding:24px 12px;background:#191d28;border-bottom:2px solid #c9a052}
+h1{color:#e9c56e;margin:0}
+header p,.muted{color:#aab5c7}
+main{max-width:1200px;margin:auto;padding:16px}
+.card{background:#171b25;border:1px solid #30394b;border-radius:10px;padding:15px;margin:12px 0}
+input,select{background:#10131b;color:white;border:1px solid #47536a;border-radius:7px;padding:12px;font-size:16px}
+input{width:100%;margin:6px 0}
+button{background:#30291d;color:#f4d78f;border:1px solid #8b7040;border-radius:7px;padding:11px;cursor:pointer}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+h2{font-size:19px;color:#65caff}
+h3{font-size:15px;color:#e9c56e}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 4px;border-bottom:1px solid #30394b;overflow-wrap:anywhere}
+th{color:#aab5c7}
+td:last-child,th:last-child{text-align:right;white-space:nowrap}
+.status{font-size:12px;color:#f4d78f}
+.note{background:#272316;padding:12px;border-radius:8px;color:#f4d78f;font-size:13px}
+footer{text-align:center;padding:20px;color:#aab5c7;font-size:12px}
+@media(max-width:760px){.columns{grid-template-columns:1fr}.controls{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
 <h1>KAMEHOUSE CRAFT</h1>
-<p>Tu guía de crafteo de Lineage II</p>
-<strong style="color:#d6ad58">L2 SUDAMÉRICA · INTERLUDE x10</strong>
+<p>Calculadora de crafting · L2 Sudamérica Interlude x10</p>
 </header>
-
-<nav>
-<button onclick="page('inicio')">Inicio</button>
-<button onclick="page('buscar')">Buscador</button>
-<button onclick="page('calc')">Calculadora</button>
-<button onclick="page('drops')">Drops y spoil</button>
-</nav>
-
 <main>
-<section id="inicio">
-<div class="card">
-<h2>Bienvenido a KameHouse Craft</h2>
-<p>Encuentra objetos, organiza tus materiales y prepara tus crafteos.</p>
-<input id="inicioBusqueda" placeholder="¿Qué objeto buscas?">
-<button onclick="buscarDesdeInicio()">Buscar objeto</button>
+<section class="card">
+<h2>Calculadora de fabricación</h2>
+<div class="controls">
+<div>
+<label for="item">Objeto</label>
+<select id="item">
+<option value="dark">Dark Legion's Edge (ejemplo)</option>
+</select>
 </div>
-<div class="card">
-<h3>⚒ Calculadora de materiales</h3>
-Calcula cuántos materiales necesitas para fabricar varios objetos.
-<p><button onclick="page('calc')">Abrir calculadora</button></p>
+<div>
+<label for="qty">Cantidad a fabricar</label>
+<input id="qty" type="number" min="1" max="999" step="1" value="1">
 </div>
-<div class="card">
-<h3>Comunidad KameHouse</h3>
-<p>Próximamente: aportes de jugadores, recetas verificadas, cuentas y favoritos.</p>
 </div>
+<p class="status">Datos de ejemplo pendientes de confirmar en el servidor.</p>
 </section>
 
-<section id="buscar" class="hidden">
-<div class="card">
-<h2>Buscador de objetos</h2>
-<input id="busqueda" placeholder="Escribe el nombre de un objeto">
-<div id="resultados"></div>
-</div>
+<div class="columns">
+<section class="card">
+<h2>01 · Componentes directos</h2>
+<table>
+<thead><tr><th>Material</th><th>Cantidad</th></tr></thead>
+<tbody id="direct"></tbody>
+</table>
 </section>
 
-<section id="calc" class="hidden">
-<div class="card">
-<h2>Calculadora de crafteo</h2>
-<label>Objeto que vas a fabricar</label>
-<input id="objeto" placeholder="Ej.: Arma o armadura">
-<label>Cantidad a fabricar</label>
-<input id="cantidad" type="number" min="1" step="1" value="1">
-<h3>Materiales por objeto</h3>
-<div id="listaMateriales">
-<div class="material">
-<input class="nombre" placeholder="Nombre del material">
-<input class="numero" type="number" min="0" step="any" placeholder="Cantidad por objeto">
-</div>
-</div>
-<button onclick="agregarMaterial()">+ Agregar material</button>
-<button onclick="calcular()">Calcular materiales</button>
-<p id="resultadoCalculo"></p>
-</div>
+<section class="card">
+<h2>02 · Craft intermedio</h2>
+<table>
+<thead><tr><th>Material</th><th>Cantidad</th></tr></thead>
+<tbody id="intermediate"></tbody>
+</table>
 </section>
 
-<section id="drops" class="hidden">
-<div class="card">
-<h2>Drops y spoil</h2>
-<input id="buscaDrop" placeholder="Buscar monstruo, objeto o zona">
-<div id="resultadoDrops"></div>
-<p class="small">Las ubicaciones y probabilidades deben verificarse específicamente en L2 Sudamérica x10.</p>
-</div>
+<section class="card">
+<h2>03 · Recursos base</h2>
+<table>
+<thead><tr><th>Recurso</th><th>Cantidad</th></tr></thead>
+<tbody id="base"></tbody>
+</table>
 </section>
+</div>
+
+<section class="card">
+<h2>Resumen</h2>
+<p id="summary"></p>
+<button onclick="copyList()">Copiar lista de materiales</button>
+<p id="copyStatus" class="status"></p>
+</section>
+
+<section class="card">
+<h2>Próximas funciones</h2>
+<p class="muted">Buscador completo, recetas verificadas, probabilidades, precios, drops, spoil y aportes comunitarios con aprobación administrativa.</p>
+</section>
+<div class="note">
+Importante: esta calculadora multiplica las cantidades de referencia. No confirma que la receta, las cantidades ni las probabilidades correspondan a L2 Sudamérica x10. Los recursos base deberán calcularse desde las recetas intermedias verificadas para evitar duplicaciones.
+</div>
 </main>
-
-<footer>
-KameHouse Craft · Proyecto comunitario independiente<br>
-L2 Sudamérica Interlude x10 · Datos sujetos a verificación
-</footer>
+<footer>KameHouse Craft · Proyecto comunitario independiente</footer>
 
 <script>
-const objetos = [
- {nombre:"Dark Legion's Edge",tipo:"Arma",
-  monstruo:"Grave Ant (pendiente de confirmar)",
-  zona:"Wall of Argos (pendiente de confirmar)",
-  estado:"Información pendiente de verificar"},
- {nombre:"Recipe",tipo:"Receta",
-  monstruo:"Por investigar",zona:"Por investigar",
-  estado:"Ejemplo de catálogo"}
-];
-
-function page(id){
- document.querySelectorAll("main section").forEach(s=>s.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
- window.scrollTo(0,0);
-}
-function seguro(s){
- return String(s).replace(/[&<>"']/g,c=>({
- "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
- }[c]));
-}
-function buscar(){
- const q=document.getElementById("busqueda").value.toLowerCase().trim();
- const encontrados=objetos.filter(o=>
-  (o.nombre+" "+o.tipo+" "+o.monstruo+" "+o.zona).toLowerCase().includes(q));
- document.getElementById("resultados").innerHTML=encontrados.length?
- encontrados.map(o=>`<div class="result"><h3>${seguro(o.nombre)}</h3>
- <p>${seguro(o.tipo)}</p><p>Monstruo: ${seguro(o.monstruo)}</p>
- <p>Zona: ${seguro(o.zona)}</p><p class="small">${seguro(o.estado)}</p></div>`).join("")
- :"<p>No se encontraron objetos en el catálogo inicial.</p>";
-}
-function buscarDesdeInicio(){
- document.getElementById("busqueda").value=document.getElementById("inicioBusqueda").value;
- page("buscar");buscar();
-}
-document.getElementById("busqueda").addEventListener("input",buscar);
-function agregarMaterial(){
- const d=document.createElement("div");d.className="material";
- d.innerHTML='<input class="nombre" placeholder="Nombre del material"><input class="numero" type="number" min="0" step="any" placeholder="Cantidad por objeto">';
- document.getElementById("listaMateriales").appendChild(d);
-}
-function calcular(){
- const nombre=document.getElementById("objeto").value.trim();
- const n=Number(document.getElementById("cantidad").value);
- const salida=document.getElementById("resultadoCalculo");
- if(!nombre){salida.textContent="Escribe el nombre del objeto.";return;}
- if(!Number.isInteger(n)||n<1){salida.textContent="Ingresa una cantidad entera mayor que cero.";return;}
- const filas=[...document.querySelectorAll(".material")],datos=[];
- for(const f of filas){
-  const nom=f.querySelector(".nombre").value.trim();
-  const val=f.querySelector(".numero").value;
-  if(!nom&&!val)continue;
-  const qty=Number(val);
-  if(!nom||val===""||!Number.isFinite(qty)||qty<0){
-   salida.textContent="Revisa el nombre y la cantidad de cada material.";return;
+const recipes = {
+  dark: {
+    name:"Dark Legion's Edge",
+    direct:[
+      ["Recipe: Dark Legion's (60%)",1],
+      ["Dark Legion's Edge Blade",14],
+      ["Crystal: A Grade",161],
+      ["Gemstone A",74],
+      ["Enria",93],
+      ["Ancient Adena",2220000]
+    ],
+    intermediate:[
+      ["Craftsman Mold",3],
+      ["Artisan's Frame",6],
+      ["Mithril Alloy",156],
+      ["Varnish of Purity",156],
+      ["Durable Metal Plate",78],
+      ["Steel",312],
+      ["Synthetic Cokes",156],
+      ["Steel Mold",6]
+    ],
+    base:[
+      ["Animal Bone",5580],
+      ["Varnish",2118],
+      ["Iron Ore",1560],
+      ["Mithril Ore",546],
+      ["Metallic Thread",390],
+      ["Animal Skin / Fangs",1030],
+      ["Stone of Purity",186],
+      ["Mold Hardener",60],
+      ["Adamantite Nugget",60],
+      ["Coal",30],
+      ["Braided Hemp",30]
+    ]
   }
-  datos.push(nom+": "+qty*n);
- }
- if(!datos.length){salida.textContent="Agrega al menos un material.";return;}
- salida.textContent="Materiales para "+n+" × "+nombre+":\n"+datos.join("\n");
+};
+
+const fmt = n => n.toLocaleString("es-CL");
+function renderTable(id, rows, qty) {
+  document.getElementById(id).innerHTML = rows.map(([name,amount]) =>
+    `<tr><td>${name}</td><td>${fmt(amount*qty)}</td></tr>`
+  ).join("");
 }
-function buscarDrop(){
- const q=document.getElementById("buscaDrop").value.toLowerCase().trim();
- const encontrados=objetos.filter(o=>
- (o.nombre+" "+o.monstruo+" "+o.zona).toLowerCase().includes(q));
- document.getElementById("resultadoDrops").innerHTML=encontrados.length?
- encontrados.map(o=>`<div class="result"><b>${seguro(o.nombre)}</b>
- <p>Monstruo: ${seguro(o.monstruo)}</p><p>Zona: ${seguro(o.zona)}</p>
- <p class="small">${seguro(o.estado)}</p></div>`).join("")
- :"<p>Sin resultados en el catálogo inicial.</p>";
+function update() {
+  const input = document.getElementById("qty");
+  let qty = Number(input.value);
+  if (!Number.isInteger(qty) || qty < 1) qty = 1;
+  if (qty > 999) qty = 999;
+  input.value = qty;
+  const recipe = recipes[document.getElementById("item").value];
+  renderTable("direct",recipe.direct,qty);
+  renderTable("intermediate",recipe.intermediate,qty);
+  renderTable("base",recipe.base,qty);
+  document.getElementById("summary").textContent =
+    "Fabricación de "+fmt(qty)+" × "+recipe.name+
+    ". Las cantidades mostradas son referencias provisionales.";
 }
-document.getElementById("buscaDrop").addEventListener("input",buscarDrop);
-buscar();buscarDrop();
+function copyList() {
+  const qty = Number(document.getElementById("qty").value);
+  const recipe = recipes[document.getElementById("item").value];
+  const sections = [
+    ["COMPONENTES DIRECTOS",recipe.direct],
+    ["CRAFT INTERMEDIO",recipe.intermediate],
+    ["RECURSOS BASE",recipe.base]
+  ];
+  const text = recipe.name+" × "+qty+"\n\n"+
+    sections.map(([title,rows])=>title+"\n"+
+    rows.map(([name,amount])=>name+": "+fmt(amount*qty)).join("\n")
+    ).join("\n\n")+
+    "\n\nDatos pendientes de verificar en L2 Sudamérica x10.";
+  const status = document.getElementById("copyStatus");
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(
+      ()=>status.textContent="Lista copiada.",
+      ()=>status.textContent="No se pudo copiar automáticamente. Puedes seleccionar y copiar los datos."
+    );
+  } else {
+    status.textContent="La copia automática no está disponible en este navegador.";
+  }
+}
+document.getElementById("qty").addEventListener("input",update);
+document.getElementById("item").addEventListener("change",update);
+update();
 </script>
 </body>
 </html>
+
